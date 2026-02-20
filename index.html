@@ -41,12 +41,6 @@ header{display:flex;flex-direction:column;align-items:center;padding:10px 4px;bo
 .header-controls{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .header-sep{width:1px;height:20px;background:rgba(212,168,67,0.25)}
 
-/* PRAYER BAR */
-#prayer-bar{display:flex;align-items:center;gap:12px;padding:6px 12px;background:var(--card);border-radius:8px;font-size:12px;flex-wrap:wrap;border:1px solid rgba(212,168,67,0.1)}
-#prayer-bar .prayer-item{display:flex;align-items:center;gap:4px;opacity:0.6}
-#prayer-bar .prayer-item.active{opacity:1;color:var(--accent);font-weight:600}
-#prayer-bar .prayer-item.next{opacity:1;color:var(--accent2)}
-
 /* BUTTONS */
 .top-btn{padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;border:1px solid rgba(212,168,67,0.25);background:var(--key-bg);color:var(--text);transition:all 0.15s;font-family:inherit;white-space:nowrap}
 .top-btn:hover{background:var(--key-hover)}
@@ -93,6 +87,35 @@ header{display:flex;flex-direction:column;align-items:center;padding:10px 4px;bo
 /* EYES */
 .eyes-grid{display:flex;gap:3px;flex-wrap:wrap}
 .eyes-grid .param-btn{font-family:'VT323',monospace;min-width:38px;padding:4px 6px;font-size:13px}
+
+/* COLLAPSIBLE CUSTOMIZE PANEL */
+#customize-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;border-radius:8px;border:1px solid rgba(212,168,67,0.25);background:var(--key-bg);color:var(--text-muted);font-size:12px;font-family:inherit;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px}
+#customize-toggle:hover{background:var(--key-hover);color:var(--text)}
+#customize-toggle.open{color:var(--accent);border-color:var(--accent)}
+#customize-toggle .arrow{transition:transform 0.2s;display:inline-block;font-size:10px}
+#customize-toggle.open .arrow{transform:rotate(180deg)}
+#customize-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out,opacity 0.2s;opacity:0}
+#customize-body.open{max-height:300px;opacity:1;transition:max-height 0.3s ease-in,opacity 0.2s}
+
+/* KEYBOARD TOGGLE */
+#kb-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;border-radius:8px;border:1px dashed rgba(212,168,67,0.3);background:transparent;color:var(--text-muted);font-size:13px;font-family:inherit;transition:all 0.15s;width:100%;justify-content:center;margin-top:6px}
+#kb-toggle:hover{background:rgba(212,168,67,0.08);color:var(--text)}
+#kb-toggle.open{border-style:solid;color:var(--accent);border-color:rgba(212,168,67,0.4)}
+#keyboard-wrap{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out}
+#keyboard-wrap.open{max-height:400px;transition:max-height 0.3s ease-in}
+
+/* CMD TOGGLE */
+#output-cmd{display:none}
+#output-cmd.open{display:block}
+#cmd-toggle{font-size:11px;cursor:pointer;color:var(--text-muted);opacity:0.7;transition:all 0.15s;background:none;border:none;font-family:inherit;padding:2px 6px}
+#cmd-toggle:hover{opacity:1;color:var(--accent)}
+
+/* SETTINGS DROPDOWN */
+#settings-dropdown{right:0;left:auto;min-width:280px}
+#settings-dropdown .settings-section{padding:8px 4px;border-bottom:1px solid rgba(212,168,67,0.1)}
+#settings-dropdown .settings-section:last-child{border-bottom:none}
+#settings-dropdown .settings-section-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;padding:0 6px}
+#settings-dropdown .settings-row{display:flex;gap:4px;flex-wrap:wrap;padding:0 4px}
 
 /* TEXT INPUT */
 #text-display{font-family:'VT323',monospace;font-size:16px;min-height:36px;padding:6px 8px;border-bottom:2px solid rgba(212,168,67,0.25);margin-bottom:8px;word-break:break-word;line-height:1.4;direction:ltr;text-align:left}
@@ -165,9 +188,6 @@ header{display:flex;flex-direction:column;align-items:center;padding:10px 4px;bo
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--accent);color:var(--bg);padding:10px 20px;border-radius:20px;font-weight:600;font-size:14px;z-index:300;transition:transform 0.4s;pointer-events:none}
 #toast.show{transform:translateX(-50%) translateY(0)}
 
-/* RAMADAN */
-.ramadan-banner{background:linear-gradient(135deg,rgba(212,168,67,0.15),rgba(26,138,125,0.15));border:1px solid rgba(212,168,67,0.3);border-radius:10px;padding:10px 14px;text-align:center;font-family:'Amiri',serif}
-
 footer{text-align:center;padding:10px 0;font-size:12px;color:var(--text-muted);font-family:'Amiri',serif}
 input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:transparent;cursor:pointer}
 
@@ -215,32 +235,31 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
       <span class="logo-title" id="app-title">CowSay Kids</span>
     </div>
     <div class="header-controls">
-      <button class="top-btn active" data-lang="en" onclick="setLang('en')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="60" height="42" fill="#012169"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#fff" stroke-width="7"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V42 M0,21 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V42 M0,21 H60" stroke="#C8102E" stroke-width="7"/></svg> EN</button>
-      <button class="top-btn" data-lang="fr" onclick="setLang('fr')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="20" height="42" fill="#002395"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ED2939"/></svg> FR</button>
-      <button class="top-btn" data-lang="ar" onclick="setLang('ar')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="30" height="42" fill="#006233"/><rect x="30" width="30" height="42" fill="#fff"/><circle cx="32" cy="21" r="8" fill="#D21034"/><circle cx="35" cy="21" r="7" fill="#fff"/><polygon points="30,15 31.5,19.5 36,19.5 32.5,22.5 33.5,27 30,24 26.5,27 27.5,22.5 24,19.5 28.5,19.5" fill="#D21034"/></svg> عربي</button>
+      <button class="top-btn active" data-lang="en" onclick="setLang('en')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="60" height="42" fill="#012169"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#fff" stroke-width="7"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#C8102E" stroke-width="4"/><path d="M30,0 V42 M0,21 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V42 M0,21 H60" stroke="#C8102E" stroke-width="7"/></svg></button>
+      <button class="top-btn" data-lang="fr" onclick="setLang('fr')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="20" height="42" fill="#002395"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ED2939"/></svg></button>
+      <button class="top-btn" data-lang="ar" onclick="setLang('ar')"><svg width="20" height="14" viewBox="0 0 60 42" style="vertical-align:middle;border-radius:2px"><rect width="30" height="42" fill="#006233"/><rect x="30" width="30" height="42" fill="#fff"/><circle cx="32" cy="21" r="8" fill="#D21034"/><circle cx="35" cy="21" r="7" fill="#fff"/><polygon points="30,15 31.5,19.5 36,19.5 32.5,22.5 33.5,27 30,24 26.5,27 27.5,22.5 24,19.5 28.5,19.5" fill="#D21034"/></svg></button>
       <span class="header-sep"></span>
       <div class="dropdown-wrap">
-        <button class="top-btn" onclick="toggleDropdown('theme-dropdown')">🎨 <span data-i18n="theme">Theme</span></button>
-        <div class="dropdown" id="theme-dropdown"></div>
+        <button class="top-btn" onclick="toggleDropdown('settings-dropdown')">⚙️</button>
+        <div class="dropdown" id="settings-dropdown">
+          <div class="settings-section">
+            <div class="settings-section-label" data-i18n="theme">Theme</div>
+            <div class="settings-row" id="theme-settings-row"></div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-label">Numerals</div>
+            <div class="settings-row">
+              <span id="numeral-toggle-settings" style="font-size:12px;cursor:pointer;color:var(--text-muted)" onclick="toggleNumerals()">🔢 <span id="numeral-label">١٢٣ ↔ 123</span></span>
+            </div>
+          </div>
+        </div>
       </div>
       <button class="top-btn" onclick="openAchievements()">🏆</button>
     </div>
     </div>
   </header>
 
-  <!-- PRAYER BAR -->
-  <div id="prayer-bar">
-    <span style="font-size:10px;color:var(--text-muted)">🕌</span>
-    <span class="prayer-item" data-prayer="fajr">🌅 Fajr</span>
-    <span class="prayer-item" data-prayer="dhuhr">☀️ Dhuhr</span>
-    <span class="prayer-item" data-prayer="asr">🌤️ Asr</span>
-    <span class="prayer-item" data-prayer="maghrib">🌅 Maghrib</span>
-    <span class="prayer-item" data-prayer="isha">🌙 Isha</span>
-    <span id="prayer-next" style="margin-left:auto;font-size:11px;color:var(--accent)"></span>
-  </div>
 
-  <!-- RAMADAN BANNER (if applicable) -->
-  <div id="ramadan-banner" class="ramadan-banner" style="display:none"></div>
 
   <!-- OUTPUT BOX -->
   <div class="panel" id="output-box">
@@ -252,7 +271,7 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
     <div id="output-actions">
       <button class="param-btn" id="copy-btn" onclick="copyOutput()">📋 <span data-i18n="copy">Copy</span></button>
       <button class="param-btn" onclick="copyCommand()">💻 Copy command</button>
-      <span id="numeral-toggle" style="margin-left:auto;font-size:12px;cursor:pointer;color:var(--text-muted)" onclick="toggleNumerals()">🔢 <span id="numeral-label">١٢٣ ↔ 123</span></span>
+      <button id="cmd-toggle" onclick="toggleCmd()">▸ Show command</button>
     </div>
   </div>
 
@@ -276,12 +295,14 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
     </div>
   </div>
 
-  <div>
+  <button id="customize-toggle" onclick="toggleCustomize()">✨ <span data-i18n="customizeLabel">Customize</span> <span class="arrow">▼</span></button>
+  <div id="customize-body">
+  <div style="margin-top:8px">
     <div class="section-label" data-i18n="mood">Mood</div>
     <div class="btn-row" id="mood-row"></div>
   </div>
 
-  <div class="params-row">
+  <div class="params-row" style="margin-top:8px">
     <div class="param-group" style="min-width:200px">
       <div class="section-label" data-i18n="eyes">Eyes</div>
       <div class="eyes-grid" id="eyes-row"></div>
@@ -291,13 +312,14 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
       <div class="eyes-grid" id="tongue-row"></div>
     </div>
   </div>
+  </div>
 
   <!-- ===== MODE TABS ===== -->
   <div id="mode-tabs">
     <button class="mode-tab active" onclick="setMode('keyboard')">⌨️ Keyboard</button>
     <button class="mode-tab" onclick="setMode('math')">🧮 Math</button>
     <button class="mode-tab" onclick="setMode('cipher')">🔐 Cipher</button>
-    <button class="mode-tab" onclick="setMode('quran')">📖 Quran</button>
+    <button class="mode-tab" onclick="setMode('learn')">📚 Learn</button>
     <button class="mode-tab" onclick="setMode('race')">🎯 Race</button>
     <button class="mode-tab" onclick="setMode('comic')">🗣️ Comic</button>
     <button class="mode-tab" onclick="setMode('goldenage')">🧪 Scientists</button>
@@ -320,7 +342,10 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
         <button class="param-btn" onclick="clearText()"><span data-i18n="clear">Clear</span></button>
         <button class="param-btn" id="caps-btn" onclick="toggleCaps()">⇪ CAPS</button>
       </div>
-      <div id="keyboard"></div>
+      <div id="keyboard-wrap">
+        <div id="keyboard"></div>
+      </div>
+      <button id="kb-toggle" onclick="toggleKeyboard()">⌨️ <span data-i18n="showKeyboard">Show Keyboard</span></button>
     </div>
   </div>
 
@@ -358,13 +383,13 @@ input[type="range"]{width:100%;accent-color:var(--accent);height:4px;background:
     </div>
   </div>
 
-  <!-- ===== QURAN MODE ===== -->
-  <div class="mode-panel" id="panel-quran">
+  <!-- ===== LEARN MODE ===== -->
+  <div class="mode-panel" id="panel-learn">
     <div class="panel">
-      <div class="section-label">📖 Quran Explorer</div>
-      <p style="font-size:12px;color:var(--text-muted);margin:4px 0 8px">Tap a surah number — the cow will recite it!</p>
-      <div class="quran-grid" id="quran-grid"></div>
-      <div id="quran-info" style="margin-top:8px"></div>
+      <div class="section-label">📚 <span class="learn-title-text">Knowledge Explorer</span></div>
+      <p style="font-size:12px;color:var(--text-muted);margin:4px 0 8px" class="learn-subtitle">Pick a category and discover something amazing!</p>
+      <div style="display:flex;gap:4px;margin:8px 0;flex-wrap:wrap" id="learn-category-btns"></div>
+      <div id="learn-content-area" style="margin-top:8px"></div>
     </div>
   </div>
 
@@ -482,9 +507,9 @@ const IQUICK=[
   {label:"جزاك الله",text:"جزاك الله خيراً"},{label:"صلى الله",text:"صلى الله عليه وسلم"},
 ];
 const PRESETS={
-  en:["Bismillah! Let's code! 💻","Eid Moo-barak! 🐄🎉","This cow wakes up for Fajr 🌅","Al-Khwarizmi invented my algorithm!","404: Grass not found 🌿","Knowledge is light! 💡","SubhanAllah, what a beautiful day!","Jummah Moo-barak! 🕌","Ibn al-Haytham invented the camera! 📷","Even cows make dua 🤲","Algebra = Al-Jabr = الجبر 🧮"],
-  fr:["Bismillah ! Codons ! 💻","Aïd Meuh-barak ! 🐄🎉","Al-Khwarizmi a inventé mon algorithme !","Le savoir est lumière ! 💡","SubhanAllah !","Joumou'a Meuh-barak ! 🕌","Ibn al-Haytham a inventé la caméra ! 📷"],
-  ar:["!بسم الله، لنبرمج 💻","!عيد مووو-بارك 🐄🎉","هذه البقرة تستيقظ لصلاة الفجر 🌅","!العلم نور 💡","!الصبر مفتاح الفرج","!سبحان الله","!جمعة مووو-باركة 🕌","!من جد وجد 💪","الجبر = Algebra 🧮"],
+  en:["Al-Khwarizmi invented my algorithm! 🧮","404: Grass not found 🌿","Knowledge is light! 💡","Ibn al-Haytham invented the camera! 📷","Algebra = Al-Jabr = الجبر 🧮","Octopuses have 3 hearts! 🐙","The first university was in Fez, Morocco! 🎓","Honey never spoils! 🍯","Paper was invented in China! 📜","A day on Venus is longer than its year! 🪐"],
+  fr:["Al-Khwarizmi a inventé mon algorithme ! 🧮","Le savoir est lumière ! 💡","Ibn al-Haytham a inventé la caméra ! 📷","Les poulpes ont 3 cœurs ! 🐙","La première université était à Fès ! 🎓","Le miel ne périme jamais ! 🍯","Le papier a été inventé en Chine ! 📜","Algèbre = Al-Jabr = الجبر 🧮","Un jour sur Vénus est plus long que son année ! 🪐"],
+  ar:["الخوارزمي اخترع خوارزميتي! 🧮","العلم نور! 💡","ابن الهيثم اخترع الكاميرا! 📷","للأخطبوط 3 قلوب! 🐙","أول جامعة كانت في فاس بالمغرب! 🎓","العسل لا يفسد أبداً! 🍯","الورق اختُرع في الصين! 📜","الجبر = Algebra 🧮","من جد وجد ومن زرع حصد! 💪"],
 };
 const THEMES={
   alhambra:{label:{en:"Alhambra",ar:"الحمراء",fr:"Alhambra"},bg:"#0a1628",card:"#0f2035",accent:"#d4a843",text:"#f0e6d0",muted:"#8a9ab5",keyBg:"#162a45",keyHov:"#1a3a5c",border:"#d4a843"},
@@ -518,72 +543,285 @@ const DUAS=[
   {ar:"اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا",en:"O Allah, I ask You for beneficial knowledge",fr:"Ô Allah, je Te demande un savoir bénéfique"},
 ];
 
-// QURAN SURAHS (first 114 — name + first ayah excerpt)
-const SURAHS=[
-  {n:"الفاتحة",en:"The Opening",ayah:"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",v:7},
-  {n:"البقرة",en:"The Cow 🐄",ayah:"الم ۚ ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ",v:286,fun:"That's ME! The longest surah!"},
-  {n:"آل عمران",en:"Family of Imran",ayah:"الم ۚ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",v:200},
-  {n:"النساء",en:"The Women",ayah:"يَا أَيُّهَا النَّاسُ اتَّقُوا رَبَّكُمُ",v:176},
-  {n:"المائدة",en:"The Table Spread",ayah:"يَا أَيُّهَا الَّذِينَ آمَنُوا أَوْفُوا بِالْعُقُودِ",v:120},
-  {n:"الأنعام",en:"The Cattle",ayah:"الْحَمْدُ لِلَّهِ الَّذِي خَلَقَ السَّمَاوَاتِ وَالْأَرْضَ",v:165},
-  {n:"الأعراف",en:"The Heights",ayah:"المص",v:206},
-  {n:"الأنفال",en:"The Spoils",ayah:"يَسْأَلُونَكَ عَنِ الْأَنفَالِ",v:75},
-  {n:"التوبة",en:"The Repentance",ayah:"بَرَاءَةٌ مِّنَ اللَّهِ وَرَسُولِهِ",v:129},
-  {n:"يونس",en:"Jonah",ayah:"الر ۚ تِلْكَ آيَاتُ الْكِتَابِ الْحَكِيمِ",v:109},
-  {n:"هود",en:"Hud",ayah:"الر ۚ كِتَابٌ أُحْكِمَتْ آيَاتُهُ",v:123},{n:"يوسف",en:"Joseph",ayah:"الر ۚ تِلْكَ آيَاتُ الْكِتَابِ الْمُبِينِ",v:111},
-  {n:"الرعد",en:"Thunder",ayah:"المر ۚ تِلْكَ آيَاتُ الْكِتَابِ",v:43},{n:"إبراهيم",en:"Abraham",ayah:"الر ۚ كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ",v:52},
-  {n:"الحجر",en:"The Rock",ayah:"الر ۚ تِلْكَ آيَاتُ الْكِتَابِ",v:99},{n:"النحل",en:"The Bee 🐝",ayah:"أَتَىٰ أَمْرُ اللَّهِ فَلَا تَسْتَعْجِلُوهُ",v:128},
-  {n:"الإسراء",en:"The Night Journey",ayah:"سُبْحَانَ الَّذِي أَسْرَىٰ بِعَبْدِهِ",v:111},{n:"الكهف",en:"The Cave",ayah:"الْحَمْدُ لِلَّهِ الَّذِي أَنزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ",v:110},
-  {n:"مريم",en:"Mary",ayah:"كهيعص",v:98},{n:"طه",en:"Ta-Ha",ayah:"طه ۚ مَا أَنزَلْنَا عَلَيْكَ الْقُرْآنَ لِتَشْقَىٰ",v:135},
-  // Surahs 21-114 abbreviated
-  {n:"الأنبياء",en:"The Prophets",ayah:"اقْتَرَبَ لِلنَّاسِ حِسَابُهُمْ",v:112},{n:"الحج",en:"The Pilgrimage",ayah:"يَا أَيُّهَا النَّاسُ اتَّقُوا رَبَّكُمْ",v:78},
-  {n:"المؤمنون",en:"The Believers",ayah:"قَدْ أَفْلَحَ الْمُؤْمِنُونَ",v:118},{n:"النور",en:"The Light",ayah:"سُورَةٌ أَنزَلْنَاهَا وَفَرَضْنَاهَا",v:64},
-  {n:"الفرقان",en:"The Criterion",ayah:"تَبَارَكَ الَّذِي نَزَّلَ الْفُرْقَانَ",v:77},{n:"الشعراء",en:"The Poets",ayah:"طسم",v:227},
-  {n:"النمل",en:"The Ant 🐜",ayah:"طس ۚ تِلْكَ آيَاتُ الْقُرْآنِ",v:93},{n:"القصص",en:"The Stories",ayah:"طسم",v:88},
-  {n:"العنكبوت",en:"The Spider 🕷️",ayah:"الم ۚ أَحَسِبَ النَّاسُ أَن يُتْرَكُوا",v:69},{n:"الروم",en:"The Romans",ayah:"الم ۚ غُلِبَتِ الرُّومُ",v:60},
-  {n:"لقمان",en:"Luqman",ayah:"الم ۚ تِلْكَ آيَاتُ الْكِتَابِ الْحَكِيمِ",v:34},{n:"السجدة",en:"The Prostration",ayah:"الم ۚ تَنزِيلُ الْكِتَابِ",v:30},
-  {n:"الأحزاب",en:"The Clans",ayah:"يَا أَيُّهَا النَّبِيُّ اتَّقِ اللَّهَ",v:73},{n:"سبأ",en:"Sheba",ayah:"الْحَمْدُ لِلَّهِ",v:54},
-  {n:"فاطر",en:"Originator",ayah:"الْحَمْدُ لِلَّهِ فَاطِرِ السَّمَاوَاتِ",v:45},{n:"يس",en:"Ya-Sin",ayah:"يس ۚ وَالْقُرْآنِ الْحَكِيمِ",v:83},
-  {n:"الصافات",en:"Those Ranged",ayah:"وَالصَّافَّاتِ صَفًّا",v:182},{n:"ص",en:"Sad",ayah:"ص ۚ وَالْقُرْآنِ ذِي الذِّكْرِ",v:88},
-  {n:"الزمر",en:"The Groups",ayah:"تَنزِيلُ الْكِتَابِ مِنَ اللَّهِ",v:75},{n:"غافر",en:"The Forgiver",ayah:"حم ۚ تَنزِيلُ الْكِتَابِ",v:85},
-  {n:"فصلت",en:"Explained",ayah:"حم ۚ تَنزِيلٌ مِّنَ الرَّحْمَٰنِ",v:54},{n:"الشورى",en:"Consultation",ayah:"حم ۚ عسق",v:53},
-  {n:"الزخرف",en:"Gold",ayah:"حم ۚ وَالْكِتَابِ الْمُبِينِ",v:89},{n:"الدخان",en:"Smoke",ayah:"حم ۚ وَالْكِتَابِ الْمُبِينِ",v:59},
-  {n:"الجاثية",en:"Kneeling",ayah:"حم ۚ تَنزِيلُ الْكِتَابِ",v:37},{n:"الأحقاف",en:"The Dunes",ayah:"حم ۚ تَنزِيلُ الْكِتَابِ",v:35},
-  {n:"محمد",en:"Muhammad ﷺ",ayah:"الَّذِينَ كَفَرُوا وَصَدُّوا عَن سَبِيلِ اللَّهِ",v:38},{n:"الفتح",en:"Victory",ayah:"إِنَّا فَتَحْنَا لَكَ فَتْحًا مُّبِينًا",v:29},
-  {n:"الحجرات",en:"The Rooms",ayah:"يَا أَيُّهَا الَّذِينَ آمَنُوا لَا تُقَدِّمُوا",v:18},{n:"ق",en:"Qaf",ayah:"ق ۚ وَالْقُرْآنِ الْمَجِيدِ",v:45},
-  {n:"الذاريات",en:"The Winds",ayah:"وَالذَّارِيَاتِ ذَرْوًا",v:60},{n:"الطور",en:"The Mount",ayah:"وَالطُّورِ",v:49},
-  {n:"النجم",en:"The Star",ayah:"وَالنَّجْمِ إِذَا هَوَىٰ",v:62},{n:"القمر",en:"The Moon",ayah:"اقْتَرَبَتِ السَّاعَةُ وَانشَقَّ الْقَمَرُ",v:55},
-  {n:"الرحمن",en:"The Most Merciful",ayah:"الرَّحْمَٰنُ ۚ عَلَّمَ الْقُرْآنَ",v:78},{n:"الواقعة",en:"The Event",ayah:"إِذَا وَقَعَتِ الْوَاقِعَةُ",v:96},
-  {n:"الحديد",en:"Iron",ayah:"سَبَّحَ لِلَّهِ مَا فِي السَّمَاوَاتِ",v:29},{n:"المجادلة",en:"The Pleading",ayah:"قَدْ سَمِعَ اللَّهُ",v:22},
-  {n:"الحشر",en:"The Exile",ayah:"سَبَّحَ لِلَّهِ",v:24},{n:"الممتحنة",en:"The Tested",ayah:"يَا أَيُّهَا الَّذِينَ آمَنُوا",v:13},
-  {n:"الصف",en:"The Ranks",ayah:"سَبَّحَ لِلَّهِ",v:14},{n:"الجمعة",en:"Friday 🕌",ayah:"يُسَبِّحُ لِلَّهِ",v:11},
-  {n:"المنافقون",en:"Hypocrites",ayah:"إِذَا جَاءَكَ الْمُنَافِقُونَ",v:11},{n:"التغابن",en:"Mutual Loss",ayah:"يُسَبِّحُ لِلَّهِ",v:18},
-  {n:"الطلاق",en:"Divorce",ayah:"يَا أَيُّهَا النَّبِيُّ",v:12},{n:"التحريم",en:"Prohibition",ayah:"يَا أَيُّهَا النَّبِيُّ",v:12},
-  {n:"الملك",en:"Sovereignty",ayah:"تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ",v:30},{n:"القلم",en:"The Pen",ayah:"ن ۚ وَالْقَلَمِ وَمَا يَسْطُرُونَ",v:52},
-  {n:"الحاقة",en:"The Reality",ayah:"الْحَاقَّةُ ۚ مَا الْحَاقَّةُ",v:52},{n:"المعارج",en:"The Ways",ayah:"سَأَلَ سَائِلٌ",v:44},
-  {n:"نوح",en:"Noah",ayah:"إِنَّا أَرْسَلْنَا نُوحًا",v:28},{n:"الجن",en:"The Jinn",ayah:"قُلْ أُوحِيَ إِلَيَّ",v:28},
-  {n:"المزمل",en:"Wrapped",ayah:"يَا أَيُّهَا الْمُزَّمِّلُ",v:20},{n:"المدثر",en:"Cloaked",ayah:"يَا أَيُّهَا الْمُدَّثِّرُ",v:56},
-  {n:"القيامة",en:"Resurrection",ayah:"لَا أُقْسِمُ بِيَوْمِ الْقِيَامَةِ",v:40},{n:"الإنسان",en:"Man",ayah:"هَلْ أَتَىٰ عَلَى الْإِنسَانِ",v:31},
-  {n:"المرسلات",en:"The Sent",ayah:"وَالْمُرْسَلَاتِ عُرْفًا",v:50},{n:"النبأ",en:"The News",ayah:"عَمَّ يَتَسَاءَلُونَ",v:40},
-  {n:"النازعات",en:"The Pullers",ayah:"وَالنَّازِعَاتِ غَرْقًا",v:46},{n:"عبس",en:"He Frowned",ayah:"عَبَسَ وَتَوَلَّىٰ",v:42},
-  {n:"التكوير",en:"Wrapping Up",ayah:"إِذَا الشَّمْسُ كُوِّرَتْ",v:29},{n:"الانفطار",en:"Splitting",ayah:"إِذَا السَّمَاءُ انفَطَرَتْ",v:19},
-  {n:"المطففين",en:"Defrauders",ayah:"وَيْلٌ لِّلْمُطَفِّفِينَ",v:36},{n:"الانشقاق",en:"Rending",ayah:"إِذَا السَّمَاءُ انشَقَّتْ",v:25},
-  {n:"البروج",en:"Constellations",ayah:"وَالسَّمَاءِ ذَاتِ الْبُرُوجِ",v:22},{n:"الطارق",en:"The Nightly",ayah:"وَالسَّمَاءِ وَالطَّارِقِ",v:17},
-  {n:"الأعلى",en:"The Most High",ayah:"سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى",v:19},{n:"الغاشية",en:"Overwhelming",ayah:"هَلْ أَتَاكَ حَدِيثُ الْغَاشِيَةِ",v:26},
-  {n:"الفجر",en:"The Dawn",ayah:"وَالْفَجْرِ",v:30},{n:"البلد",en:"The City",ayah:"لَا أُقْسِمُ بِهَٰذَا الْبَلَدِ",v:20},
-  {n:"الشمس",en:"The Sun",ayah:"وَالشَّمْسِ وَضُحَاهَا",v:15},{n:"الليل",en:"The Night",ayah:"وَاللَّيْلِ إِذَا يَغْشَىٰ",v:21},
-  {n:"الضحى",en:"Morning Light",ayah:"وَالضُّحَىٰ",v:11},{n:"الشرح",en:"Relief",ayah:"أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ",v:8},
-  {n:"التين",en:"The Fig",ayah:"وَالتِّينِ وَالزَّيْتُونِ",v:8},{n:"العلق",en:"The Clot",ayah:"اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",v:19,fun:"First word revealed: IQRA! (Read!)"},
-  {n:"القدر",en:"The Power",ayah:"إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ",v:5},{n:"البينة",en:"Clear Proof",ayah:"لَمْ يَكُنِ الَّذِينَ كَفَرُوا",v:8},
-  {n:"الزلزلة",en:"The Quake",ayah:"إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا",v:8},{n:"العاديات",en:"The Chargers 🐴",ayah:"وَالْعَادِيَاتِ ضَبْحًا",v:11},
-  {n:"القارعة",en:"The Calamity",ayah:"الْقَارِعَةُ ۚ مَا الْقَارِعَةُ",v:11},{n:"التكاثر",en:"Rivalry",ayah:"أَلْهَاكُمُ التَّكَاثُرُ",v:8},
-  {n:"العصر",en:"Time",ayah:"وَالْعَصْرِ ۚ إِنَّ الْإِنسَانَ لَفِي خُسْرٍ",v:3},{n:"الهمزة",en:"The Slanderer",ayah:"وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ",v:9},
-  {n:"الفيل",en:"The Elephant 🐘",ayah:"أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ",v:5},{n:"قريش",en:"Quraysh",ayah:"لِإِيلَافِ قُرَيْشٍ",v:4},
-  {n:"الماعون",en:"Small Kindnesses",ayah:"أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ",v:7},{n:"الكوثر",en:"Abundance",ayah:"إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",v:3},
-  {n:"الكافرون",en:"The Disbelievers",ayah:"قُلْ يَا أَيُّهَا الْكَافِرُونَ",v:6},{n:"النصر",en:"Divine Help",ayah:"إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ",v:3},
-  {n:"المسد",en:"Twisted Fiber",ayah:"تَبَّتْ يَدَا أَبِي لَهَبٍ",v:5},{n:"الإخلاص",en:"Sincerity",ayah:"قُلْ هُوَ اللَّهُ أَحَدٌ",v:4},
-  {n:"الفلق",en:"The Daybreak",ayah:"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",v:5},{n:"الناس",en:"Mankind",ayah:"قُلْ أَعُوذُ بِرَبِّ النَّاسِ",v:6},
-];
+// EDUCATIONAL CONTENT DATABASE
+const LEARN_CATEGORIES = {
+  proverbs: {emoji:"📜",en:"Proverbs",fr:"Proverbes",ar:"أمثال"},
+  science: {emoji:"🔬",en:"Fun Science",fr:"Sciences",ar:"حقائق علمية"},
+  math: {emoji:"🧩",en:"Math Puzzles",fr:"Énigmes Math",ar:"ألغاز رياضيات"},
+  arabic: {emoji:"✍️",en:"Arabic Language",fr:"Langue arabe",ar:"لغة عربية"},
+  history: {emoji:"🏛️",en:"Civilizations",fr:"Civilisations",ar:"تاريخ الحضارات"},
+  nature: {emoji:"🌿",en:"Amazing Nature",fr:"Nature",ar:"عجائب الطبيعة"},
+  coding: {emoji:"💻",en:"Coding Basics",fr:"Bases du code",ar:"مفاهيم برمجة"}
+};
+
+const LEARN_CONTENT = {
+  proverbs: {
+    en:[
+      "Seek knowledge from the cradle to the grave.",
+      "The pen is mightier than the sword.",
+      "A journey of a thousand miles begins with a single step.",
+      "Knowledge is a treasure that follows its owner everywhere.",
+      "He who asks a question is a fool for five minutes; he who does not is a fool forever.",
+      "An investment in knowledge pays the best interest.",
+      "The roots of education are bitter, but the fruit is sweet.",
+      "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
+      "The more you know, the more you realize you don't know.",
+      "Patience is the key to relief."
+    ],
+    fr:[
+      "Qui cherche trouve — celui qui cherche finit toujours par trouver.",
+      "La plume est plus forte que l'épée.",
+      "Un voyage de mille lieues commence par un seul pas.",
+      "Le savoir est un trésor qui suit partout son maître.",
+      "Celui qui pose une question est bête cinq minutes, celui qui n'en pose pas l'est toute sa vie.",
+      "L'éducation est l'arme la plus puissante pour changer le monde.",
+      "Les racines de l'éducation sont amères, mais le fruit est doux.",
+      "Dis-moi et j'oublie. Enseigne-moi et je me souviens. Implique-moi et j'apprends.",
+      "Plus on apprend, plus on réalise qu'on ne sait rien.",
+      "La patience est la clé du soulagement."
+    ],
+    ar:[
+      "اطلبوا العلم من المهد إلى اللحد",
+      "القلم أقوى من السيف",
+      "رحلة الألف ميل تبدأ بخطوة واحدة",
+      "العلم كنز يتبع صاحبه أينما ذهب",
+      "من سأل سؤالاً جاهلاً لخمس دقائق، ومن لم يسأل جاهل إلى الأبد",
+      "إذا أردت أن تُطاع فاسأل ما يُستطاع",
+      "في التأني السلامة وفي العجلة الندامة",
+      "العلم في الصغر كالنقش على الحجر",
+      "من جدّ وجد ومن زرع حصد",
+      "الصبر مفتاح الفرج"
+    ]
+  },
+  science: {
+    en:[
+      "Octopuses have 3 hearts and blue blood! 🐙",
+      "A teaspoon of neutron star weighs 6 billion tons! ⭐",
+      "Honey never spoils — edible honey was found in 3000-year-old Egyptian tombs! 🍯",
+      "Sound travels 4.3 times faster in water than in air! 🌊",
+      "Your body has about 37.2 trillion cells! 🧬",
+      "Lightning is 5 times hotter than the surface of the Sun! ⚡",
+      "Bananas are slightly radioactive due to potassium-40! 🍌",
+      "A day on Venus is longer than a year on Venus! 🪐",
+      "Sharks have been around longer than trees — 400 million years! 🦈",
+      "The human brain uses 20% of the body's total energy! 🧠"
+    ],
+    fr:[
+      "Les poulpes ont 3 cœurs et du sang bleu ! 🐙",
+      "Une cuillère d'étoile à neutrons pèse 6 milliards de tonnes ! ⭐",
+      "Le miel ne se périme jamais — du miel comestible a été trouvé dans des tombes égyptiennes de 3000 ans ! 🍯",
+      "Le son voyage 4,3 fois plus vite dans l'eau que dans l'air ! 🌊",
+      "Ton corps contient environ 37,2 billions de cellules ! 🧬",
+      "La foudre est 5 fois plus chaude que la surface du Soleil ! ⚡",
+      "Les bananes sont légèrement radioactives à cause du potassium-40 ! 🍌",
+      "Un jour sur Vénus est plus long qu'une année sur Vénus ! 🪐",
+      "Les requins existent depuis plus longtemps que les arbres — 400 millions d'années ! 🦈",
+      "Le cerveau humain utilise 20% de l'énergie totale du corps ! 🧠"
+    ],
+    ar:[
+      "للأخطبوط 3 قلوب ودم أزرق! 🐙",
+      "ملعقة من نجم نيوتروني تزن 6 مليارات طن! ⭐",
+      "العسل لا يفسد أبداً — وُجد عسل صالح للأكل في مقابر مصرية عمرها 3000 سنة! 🍯",
+      "الصوت ينتقل أسرع 4.3 مرة في الماء منه في الهواء! 🌊",
+      "جسمك يحتوي على حوالي 37.2 تريليون خلية! 🧬",
+      "البرق أشد حرارة 5 مرات من سطح الشمس! ⚡",
+      "الموز مشع قليلاً بسبب البوتاسيوم-40! 🍌",
+      "اليوم على كوكب الزهرة أطول من السنة على كوكب الزهرة! 🪐",
+      "أسماك القرش أقدم من الأشجار — 400 مليون سنة! 🦈",
+      "الدماغ البشري يستخدم 20% من طاقة الجسم الكلية! 🧠"
+    ]
+  },
+  math: {
+    en:[
+      "What is 7 × 8? Think before you peek! (Answer: 56)",
+      "If you fold a paper 42 times, it reaches the Moon! 🌙",
+      "0.999999... repeating forever equals exactly 1!",
+      "A googol is 1 followed by 100 zeros. A googolplex is 10^googol!",
+      "There are more possible chess games than atoms in the universe! ♟️",
+      "The sum of all numbers from 1 to 100 = 5050. Gauss figured this out at age 7!",
+      "Pi (π) has been calculated to over 100 trillion digits!",
+      "Every even number greater than 2 can be written as the sum of two primes!",
+      "A Fibonacci spiral appears in sunflowers, galaxies, and hurricanes! 🌻",
+      "Zero was invented in India around 500 AD — it changed everything!"
+    ],
+    fr:[
+      "Combien font 7 × 8 ? Réfléchis avant de regarder ! (Réponse : 56)",
+      "Si tu plies une feuille 42 fois, elle atteint la Lune ! 🌙",
+      "0,999999... à l'infini est exactement égal à 1 !",
+      "Un googol est 1 suivi de 100 zéros. Un googolplex est 10^googol !",
+      "Il y a plus de parties d'échecs possibles que d'atomes dans l'univers ! ♟️",
+      "La somme de 1 à 100 = 5050. Gauss l'a trouvé à 7 ans !",
+      "Pi (π) a été calculé à plus de 100 billions de décimales !",
+      "Tout nombre pair supérieur à 2 est la somme de deux nombres premiers !",
+      "La spirale de Fibonacci apparaît dans les tournesols, les galaxies et les ouragans ! 🌻",
+      "Le zéro a été inventé en Inde vers 500 après J.-C. — ça a tout changé !"
+    ],
+    ar:[
+      "كم يساوي 7 × 8؟ فكّر قبل أن تنظر! (الجواب: 56)",
+      "إذا طويت ورقة 42 مرة، ستصل إلى القمر! 🌙",
+      "0.999999... إلى ما لا نهاية يساوي بالضبط 1!",
+      "الغوغول هو 1 متبوعاً بـ100 صفر. الغوغولبلكس هو 10 أس غوغول!",
+      "عدد ألعاب الشطرنج الممكنة أكبر من عدد الذرات في الكون! ♟️",
+      "مجموع الأرقام من 1 إلى 100 = 5050. اكتشفها غاوس وعمره 7 سنوات!",
+      "تم حساب باي (π) لأكثر من 100 تريليون رقم!",
+      "كل عدد زوجي أكبر من 2 يمكن كتابته كمجموع عددين أوليين!",
+      "حلزون فيبوناتشي يظهر في دوار الشمس والمجرات والأعاصير! 🌻",
+      "اخترع الصفر في الهند حوالي 500 ميلادي — غيّر كل شيء!"
+    ]
+  },
+  arabic: {
+    en:[
+      "Arabic is read from right to left — one of 12 RTL languages! ←",
+      "'Algorithm' comes from Al-Khwarizmi — an Arabic mathematician! 🧮",
+      "Arabic has 28 letters. Each changes shape based on position!",
+      "The word 'coffee' comes from Arabic 'qahwa' (قهوة)! ☕",
+      "'Magazine' comes from Arabic 'makhazin' (مخازن) meaning storehouse!",
+      "Arabic calligraphy is considered one of the highest art forms ✒️",
+      "The Arabic root system: 3 letters create families of related words!",
+      "'Sugar' comes from Arabic 'sukkar' (سكر)!",
+      "Arabic has 12 million+ words — one of the richest languages!",
+      "'Algebra' comes from Arabic 'al-jabr' (الجبر) meaning restoration! 📐"
+    ],
+    fr:[
+      "L'arabe se lit de droite à gauche — une des 12 langues RTL ! ←",
+      "'Algorithme' vient d'Al-Khwarizmi — un mathématicien arabe ! 🧮",
+      "L'arabe a 28 lettres. Chacune change de forme selon sa position !",
+      "Le mot 'café' vient de l'arabe 'qahwa' (قهوة) ! ☕",
+      "'Magasin' vient de l'arabe 'makhazin' (مخازن) signifiant entrepôt !",
+      "La calligraphie arabe est considérée comme un art majeur ✒️",
+      "Le système de racines arabes : 3 lettres créent des familles de mots !",
+      "'Sucre' vient de l'arabe 'sukkar' (سكر) !",
+      "L'arabe a plus de 12 millions de mots — une des langues les plus riches !",
+      "'Algèbre' vient de l'arabe 'al-jabr' (الجبر) signifiant restauration ! 📐"
+    ],
+    ar:[
+      "في اللغة العربية 28 حرفاً، كل حرف يتغير شكله حسب موقعه!",
+      "كلمة 'خوارزمية' تأتي من اسم العالِم الخوارزمي! 🧮",
+      "الجذر الثلاثي: 3 حروف تُنشئ عائلات من الكلمات المترابطة!",
+      "كلمة 'قهوة' انتقلت من العربية إلى كل لغات العالم! ☕",
+      "كلمة 'مخازن' أصبحت magazine في الإنجليزية!",
+      "الخط العربي يُعتبر من أرقى الفنون في العالم ✒️",
+      "العربية من أغنى اللغات — أكثر من 12 مليون كلمة!",
+      "كلمة 'سكر' العربية أصبحت sugar في الإنجليزية!",
+      "النحو العربي: الفاعل مرفوع، المفعول به منصوب، المضاف إليه مجرور!",
+      "كلمة 'الجبر' العربية أصبحت Algebra في كل اللغات! 📐"
+    ]
+  },
+  history: {
+    en:[
+      "The Great Library of Alexandria held 400,000+ scrolls of knowledge! 📚",
+      "The House of Wisdom in Baghdad was the world's greatest center of learning (800 AD)!",
+      "Paper was invented in China around 105 AD — it changed civilization! 📜",
+      "Ancient Egyptians invented toothpaste 5000 years ago! 🦷",
+      "The Silk Road connected China to Rome — 6,400 km of trade and ideas! 🐫",
+      "The first university was founded in Fez, Morocco in 859 AD! 🎓",
+      "Ancient Greeks calculated the Earth's circumference 2200 years ago!",
+      "The compass was invented in China during the Han Dynasty! 🧭",
+      "Mesopotamia (modern Iraq) invented writing around 3400 BC! ✍️",
+      "Al-Jazari built programmable robots in 1206 AD! 🤖"
+    ],
+    fr:[
+      "La Grande Bibliothèque d'Alexandrie contenait 400 000+ rouleaux de savoir ! 📚",
+      "La Maison de la Sagesse à Bagdad était le plus grand centre du savoir au monde (800 ap. J.-C.) !",
+      "Le papier a été inventé en Chine vers 105 ap. J.-C. — ça a changé la civilisation ! 📜",
+      "Les Égyptiens anciens ont inventé le dentifrice il y a 5000 ans ! 🦷",
+      "La Route de la Soie reliait la Chine à Rome — 6 400 km de commerce et d'idées ! 🐫",
+      "La première université a été fondée à Fès, au Maroc, en 859 ap. J.-C. ! 🎓",
+      "Les Grecs anciens ont calculé la circonférence de la Terre il y a 2200 ans !",
+      "La boussole a été inventée en Chine sous la dynastie Han ! 🧭",
+      "La Mésopotamie (Irak actuel) a inventé l'écriture vers 3400 av. J.-C. ! ✍️",
+      "Al-Jazari a construit des robots programmables en 1206 ! 🤖"
+    ],
+    ar:[
+      "مكتبة الإسكندرية الكبرى احتوت أكثر من 400,000 لفافة من المعرفة! 📚",
+      "بيت الحكمة في بغداد كان أعظم مركز للعلم في العالم (800 م)!",
+      "اختُرع الورق في الصين حوالي 105 م — غيّر الحضارة! 📜",
+      "المصريون القدماء اخترعوا معجون الأسنان قبل 5000 سنة! 🦷",
+      "طريق الحرير ربط الصين بروما — 6400 كم من التجارة والأفكار! 🐫",
+      "أول جامعة في العالم تأسست في فاس، المغرب عام 859 م! 🎓",
+      "الإغريق القدماء حسبوا محيط الأرض قبل 2200 سنة!",
+      "اختُرعت البوصلة في الصين خلال أسرة هان! 🧭",
+      "بلاد ما بين النهرين (العراق الحالي) اخترعت الكتابة حوالي 3400 ق.م! ✍️",
+      "الجزري بنى روبوتات قابلة للبرمجة عام 1206 م! 🤖"
+    ]
+  },
+  nature: {
+    en:[
+      "A single tree can absorb 22 kg of CO₂ per year! 🌳",
+      "The Amazon Rainforest produces 20% of the world's oxygen! 🌿",
+      "A hummingbird's heart beats over 1,200 times per minute! 💓",
+      "Dolphins sleep with one eye open — half their brain stays awake! 🐬",
+      "Honey bees visit 2 million flowers to make 1 pound of honey! 🐝",
+      "The deepest ocean point is 11,034 meters — deeper than Everest is tall! 🌊",
+      "A chameleon's tongue is twice the length of its body! 🦎",
+      "Bamboo can grow 91 cm in a single day! 🎋",
+      "Migration: Arctic terns fly 71,000 km every year! 🐦",
+      "There are more stars in the universe than grains of sand on Earth! ✨"
+    ],
+    fr:[
+      "Un seul arbre peut absorber 22 kg de CO₂ par an ! 🌳",
+      "La forêt amazonienne produit 20% de l'oxygène mondial ! 🌿",
+      "Le cœur d'un colibri bat plus de 1 200 fois par minute ! 💓",
+      "Les dauphins dorment avec un œil ouvert — la moitié de leur cerveau reste éveillée ! 🐬",
+      "Les abeilles visitent 2 millions de fleurs pour faire 500g de miel ! 🐝",
+      "Le point le plus profond de l'océan est à 11 034 mètres ! 🌊",
+      "La langue d'un caméléon fait deux fois la longueur de son corps ! 🦎",
+      "Le bambou peut pousser de 91 cm en un seul jour ! 🎋",
+      "La sterne arctique parcourt 71 000 km chaque année ! 🐦",
+      "Il y a plus d'étoiles dans l'univers que de grains de sable sur Terre ! ✨"
+    ],
+    ar:[
+      "شجرة واحدة تمتص 22 كغ من ثاني أكسيد الكربون سنوياً! 🌳",
+      "غابة الأمازون تنتج 20% من أكسجين العالم! 🌿",
+      "قلب الطائر الطنان ينبض أكثر من 1200 مرة في الدقيقة! 💓",
+      "الدلافين تنام بعين مفتوحة — نصف دماغها يبقى مستيقظاً! 🐬",
+      "النحل يزور 2 مليون زهرة لصنع نصف كيلو عسل! 🐝",
+      "أعمق نقطة في المحيط 11,034 متراً — أعمق من ارتفاع إيفرست! 🌊",
+      "لسان الحرباء ضعف طول جسمها! 🦎",
+      "الخيزران يمكن أن ينمو 91 سم في يوم واحد! 🎋",
+      "طائر الخرشنة القطبية يطير 71,000 كم كل سنة! 🐦",
+      "عدد النجوم في الكون أكثر من حبات الرمل على الأرض! ✨"
+    ]
+  },
+  coding: {
+    en:[
+      "A 'bug' in code? The first real bug was a moth stuck in a computer in 1947! 🐛",
+      "Binary: computers only understand 0 and 1. Everything else is built from that!",
+      "A pixel is the smallest unit on your screen — millions make one image! 🖼️",
+      "Python was named after Monty Python, not the snake! 🐍",
+      "The first programmer was Ada Lovelace in 1843 — before computers existed! 👩‍💻",
+      "HTML is not a programming language — it's a markup language for web pages! 🌐",
+      "An algorithm is a step-by-step recipe for solving a problem! 📋",
+      "The word 'robot' comes from Czech 'robota' meaning forced labor! 🤖",
+      "The internet sends about 500 million tweets per day! 🐦",
+      "A loop repeats code: for, while, do-while. It's like a washing machine cycle! 🔄"
+    ],
+    fr:[
+      "Un 'bug' dans le code ? Le premier vrai bug était un papillon coincé dans un ordinateur en 1947 ! 🐛",
+      "Binaire : les ordinateurs ne comprennent que 0 et 1. Tout le reste est construit à partir de ça !",
+      "Un pixel est la plus petite unité sur ton écran — des millions forment une image ! 🖼️",
+      "Python a été nommé d'après Monty Python, pas le serpent ! 🐍",
+      "La première programmeuse était Ada Lovelace en 1843 — avant que les ordinateurs n'existent ! 👩‍💻",
+      "HTML n'est pas un langage de programmation — c'est un langage de balisage ! 🌐",
+      "Un algorithme est une recette étape par étape pour résoudre un problème ! 📋",
+      "Le mot 'robot' vient du tchèque 'robota' qui signifie travail forcé ! 🤖",
+      "Internet envoie environ 500 millions de tweets par jour ! 🐦",
+      "Une boucle répète du code : for, while, do-while. C'est comme un cycle de machine à laver ! 🔄"
+    ],
+    ar:[
+      "خطأ في الكود؟ أول خطأ حقيقي كان فراشة علقت في حاسوب عام 1947! 🐛",
+      "النظام الثنائي: الحواسيب تفهم فقط 0 و1. كل شيء آخر يُبنى من ذلك!",
+      "البكسل هو أصغر وحدة على شاشتك — الملايين تصنع صورة واحدة! 🖼️",
+      "لغة بايثون سُميت على اسم مونتي بايثون الكوميدي، وليس الأفعى! 🐍",
+      "أول مبرمجة كانت آدا لوفليس عام 1843 — قبل اختراع الحواسيب! 👩‍💻",
+      "HTML ليست لغة برمجة — إنها لغة توصيف لصفحات الويب! 🌐",
+      "الخوارزمية هي وصفة خطوة بخطوة لحل مشكلة! 📋",
+      "كلمة 'روبوت' تأتي من التشيكية 'روبوتا' وتعني العمل القسري! 🤖",
+      "الإنترنت يرسل حوالي 500 مليون تغريدة يومياً! 🐦",
+      "الحلقة تكرر الكود: for, while, do-while. مثل دورة الغسالة! 🔄"
+    ]
+  }
+};
 
 // SCIENTISTS
 const SCIENTISTS=[
@@ -619,9 +857,9 @@ const BADGES=[
   {id:"khwarizmi",emoji:"🧮",name:"Al-Khwarizmi",desc:"Solve 5 math problems",check:s=>s.mathCount>=5},
   {id:"cipher",emoji:"🔐",name:"Cipher Master",desc:"Encode 10 messages",check:s=>s.cipherCount>=10},
   {id:"zoo",emoji:"🐄",name:"Zoo Keeper",desc:"Try 10 different characters",check:s=>s.charsUsed.size>=10},
-  {id:"themes",emoji:"🎨",name:"World Traveler",desc:"Visit all 12 themes",check:s=>s.themesUsed.size>=12},
-  {id:"quran10",emoji:"📖",name:"Quran Explorer",desc:"Look up 10 surahs",check:s=>s.surahsViewed.size>=10},
-  {id:"quranAll",emoji:"📚",name:"Hafiz Helper",desc:"Look up all 114 surahs",check:s=>s.surahsViewed.size>=114},
+  {id:"themes",emoji:"🎨",name:"World Traveler",desc:"Visit all 13 themes",check:s=>s.themesUsed.size>=13},
+  {id:"learn10",emoji:"📚",name:"Knowledge Seeker",desc:"Read 10 facts",check:s=>(s.factsViewed||0)>=10},
+  {id:"learn50",emoji:"🎓",name:"Scholar",desc:"Read 50 facts",check:s=>(s.factsViewed||0)>=50},
   {id:"racer",emoji:"🏎️",name:"Speed Typist",desc:"Complete 5 typing races",check:s=>s.racesWon>=5},
   {id:"comic",emoji:"🗣️",name:"Comic Creator",desc:"Make 3 comic strips",check:s=>s.comicsCreated>=3},
   {id:"scientist",emoji:"🧪",name:"Golden Scholar",desc:"Read about all scientists",check:s=>s.scientistsViewed.size>=SCIENTISTS.length},
@@ -637,11 +875,11 @@ let S={lang:"en",themeId:"alhambra",text:"",charId:"default",mood:"normal",custo
 // Stats (persisted)
 let stats;
 try{stats=JSON.parse(localStorage.getItem("cowsay-stats"))||{}}catch(e){stats={}}
-stats={msgCount:0,mathCount:0,cipherCount:0,charsUsed:new Set(),themesUsed:new Set(["alhambra"]),surahsViewed:new Set(),racesWon:0,comicsCreated:0,scientistsViewed:new Set(),masjidBuilt:false,appOpens:0,...stats};
+stats={msgCount:0,mathCount:0,cipherCount:0,charsUsed:new Set(),themesUsed:new Set(["alhambra"]),factsViewed:0,racesWon:0,comicsCreated:0,scientistsViewed:new Set(),masjidBuilt:false,appOpens:0,...stats};
 // Restore Sets
-["charsUsed","themesUsed","surahsViewed","scientistsViewed"].forEach(k=>{if(Array.isArray(stats[k]))stats[k]=new Set(stats[k])});
+["charsUsed","themesUsed","scientistsViewed"].forEach(k=>{if(Array.isArray(stats[k]))stats[k]=new Set(stats[k])});
 stats.appOpens=(stats.appOpens||0)+1;
-function saveStats(){const o={...stats};["charsUsed","themesUsed","surahsViewed","scientistsViewed"].forEach(k=>{o[k]=[...stats[k]]});try{localStorage.setItem("cowsay-stats",JSON.stringify(o))}catch(e){}}
+function saveStats(){const o={...stats};["charsUsed","themesUsed","scientistsViewed"].forEach(k=>{o[k]=[...stats[k]]});try{localStorage.setItem("cowsay-stats",JSON.stringify(o))}catch(e){}}
 
 // ==============================
 // COWSAY ENGINE
@@ -670,7 +908,7 @@ function render(){
   if(S.charId!=="default")cmd+=` -f ${S.charId}`;
   if(eyes!=="oo")cmd+=` -e "${eyes}"`;
   if(tongue)cmd+=` -T "${tongue}"`;
-  if(S.wrapWidth!==40)cmd+=` -W ${S.wrapWidth}`;
+  if(S.wrapWidth!==30)cmd+=` -W ${S.wrapWidth}`;
   // Mood flags
   const moodFlags={borg:"-b",dead:"-d",greedy:"-g",paranoid:"-p",dizzy:"-s",tired:"-t",wired:"-w",young:"-y"};
   if(!S.customEyes&&moodFlags[S.mood])cmd=cmd.replace(/ -e "[^"]*"/,"")+" "+moodFlags[S.mood];
@@ -702,21 +940,23 @@ function buildMoodRow(){const r=document.getElementById("mood-row");r.innerHTML=
 function buildEyesRow(){const r=document.getElementById("eyes-row");r.innerHTML="";CEYES.forEach(e=>{const b=document.createElement("button");b.className="param-btn"+(S.customEyes===e?" active":"");b.textContent=e;b.style.fontFamily="'VT323',monospace";b.style.minWidth="38px";b.onclick=()=>{S.customEyes=S.customEyes===e?null:e;buildEyesRow();render()};r.appendChild(b)})}
 function buildTongueRow(){const r=document.getElementById("tongue-row");r.innerHTML="";CTONGUES.forEach(tg=>{const b=document.createElement("button");b.className="param-btn"+(S.customTongue===tg?" active":"");b.textContent=tg.trim()||"—";b.style.fontFamily="'VT323',monospace";b.style.minWidth="38px";b.onclick=()=>{S.customTongue=S.customTongue===tg?null:tg;buildTongueRow();render()};r.appendChild(b)})}
 
-function buildKeyboard(){const kb=document.getElementById("keyboard");kb.innerHTML="";const isAr=S.lang==="ar";kb.dir=isAr?"rtl":"ltr";(KBS[S.lang]||KBS.en).forEach((row,ri)=>{const div=document.createElement("div");div.className="kb-row";div.style.direction=isAr?"rtl":"ltr";if(!isAr){div.style.paddingLeft=ri===2?"20px":ri===3?"44px":"0";div.style.paddingRight=ri===2?"20px":ri===3?"44px":"0"}row.forEach(key=>{const btn=document.createElement("button");btn.className="zellige-key";btn.textContent=S.capsLock&&!isAr?key.toUpperCase():key;btn.onclick=()=>{S.text+=S.capsLock&&!isAr?key.toUpperCase():key;updateTextDisplay();render();stats.msgCount++;saveStats();checkBadges()};div.appendChild(btn)});kb.appendChild(div)});const bot=document.createElement("div");bot.className="kb-row";bot.style.direction=isAr?"rtl":"ltr";[{l:"⌫",c:"special",s:"flex:0 0 60px;max-width:none",a:()=>{S.text=S.text.slice(0,-1)}},{l:"─── ───",c:"space",s:"flex:1;max-width:260px",a:()=>{S.text+=" "}},{l:".",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="."}},{l:"!",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="!"}},{l:"?",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="?"}},{l:"،",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="،"}}].forEach(k=>{const btn=document.createElement("button");btn.className="zellige-key "+(k.c||"");btn.style.cssText=k.s||"";btn.textContent=k.l;btn.onclick=()=>{k.a();updateTextDisplay();render()};bot.appendChild(btn)});kb.appendChild(bot)}
+function buildKeyboard(){const kb=document.getElementById("keyboard");kb.innerHTML="";const isAr=S.lang==="ar";kb.dir=isAr?"rtl":"ltr";(KBS[S.lang]||KBS.en).forEach((row,ri)=>{const div=document.createElement("div");div.className="kb-row";div.style.direction=isAr?"rtl":"ltr";if(!isAr){div.style.paddingLeft=ri===2?"20px":ri===3?"44px":"0";div.style.paddingRight=ri===2?"20px":ri===3?"44px":"0"}row.forEach(key=>{const btn=document.createElement("button");btn.className="zellige-key";btn.textContent=S.capsLock&&!isAr?key.toUpperCase():key;btn.onclick=()=>{const wasEmpty=S.text.length===0;S.text+=S.capsLock&&!isAr?key.toUpperCase():key;updateTextDisplay();render();if(wasEmpty){stats.msgCount++;saveStats();checkBadges()}};div.appendChild(btn)});kb.appendChild(div)});const bot=document.createElement("div");bot.className="kb-row";bot.style.direction=isAr?"rtl":"ltr";[{l:"⌫",c:"special",s:"flex:0 0 60px;max-width:none",a:()=>{S.text=S.text.slice(0,-1)}},{l:"─── ───",c:"space",s:"flex:1;max-width:260px",a:()=>{S.text+=" "}},{l:".",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="."}},{l:"!",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="!"}},{l:"?",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="?"}},{l:"،",c:"special",s:"flex:0 0 40px;max-width:none",a:()=>{S.text+="،"}}].forEach(k=>{const btn=document.createElement("button");btn.className="zellige-key "+(k.c||"");btn.style.cssText=k.s||"";btn.textContent=k.l;btn.onclick=()=>{k.a();updateTextDisplay();render()};bot.appendChild(btn)});kb.appendChild(bot)}
 function buildQuickKeys(){const r=document.getElementById("quick-keys");r.innerHTML="";r.dir=S.lang==="ar"?"rtl":"ltr";IQUICK.forEach(k=>{const b=document.createElement("button");b.className="quick-key";b.textContent=k.label;b.onclick=()=>{S.text=k.text;updateTextDisplay();render();stats.msgCount++;saveStats();checkBadges()};r.appendChild(b)})}
 function buildCharDropdown(){const dd=document.getElementById("char-dropdown");dd.innerHTML="";Object.entries(CHARS).forEach(([id,ch])=>{const d=document.createElement("div");d.className="drop-item"+(S.charId===id?" active":"");d.innerHTML=`<span style="font-size:18px">${ch.emoji}</span><span>${ch.name[S.lang]||ch.name.en}</span>`;d.onclick=()=>{S.charId=id;stats.charsUsed.add(id);saveStats();checkBadges();closeAllDropdowns();buildCharDropdown();renderCharBtn();render()};dd.appendChild(d)})}
-function buildThemeDropdown(){const dd=document.getElementById("theme-dropdown");dd.innerHTML="";Object.entries(THEMES).forEach(([id,th])=>{const d=document.createElement("div");d.className="drop-item"+(S.themeId===id?" active":"");d.innerHTML=`<span class="drop-swatch" style="background:${th.bg};border-color:${th.accent}"></span><span>${th.label[S.lang]||th.label.en}</span>`;d.onclick=()=>{S.themeId=id;stats.themesUsed.add(id);saveStats();checkBadges();closeAllDropdowns();buildThemeDropdown();renderAll()};dd.appendChild(d)})}
+function buildThemeDropdown(){const dd=document.getElementById("theme-settings-row");dd.innerHTML="";Object.entries(THEMES).forEach(([id,th])=>{const d=document.createElement("div");d.className="drop-item"+(S.themeId===id?" active":"");d.innerHTML=`<span class="drop-swatch" style="background:${th.bg};border-color:${th.accent}"></span><span>${th.label[S.lang]||th.label.en}</span>`;d.onclick=()=>{S.themeId=id;stats.themesUsed.add(id);saveStats();checkBadges();closeAllDropdowns();buildThemeDropdown();renderAll()};dd.appendChild(d)})}
 function buildPresetsDropdown(){const dd=document.getElementById("presets-dropdown");dd.innerHTML="";(PRESETS[S.lang]||PRESETS.en).forEach(msg=>{const d=document.createElement("div");d.className="drop-item";d.textContent=msg;d.style.fontSize="13px";d.onclick=()=>{S.text=msg;closeAllDropdowns();updateTextDisplay();render();stats.msgCount++;saveStats();checkBadges()};dd.appendChild(d)})}
 
 // QURAN GRID
-function buildQuranGrid(){const g=document.getElementById("quran-grid");g.innerHTML="";SURAHS.forEach((s,i)=>{const d=document.createElement("div");d.className="quran-num";d.textContent=i+1;d.title=s.n+" — "+s.en;d.onclick=()=>showSurah(i);g.appendChild(d)})}
-function showSurah(i){const s=SURAHS[i],info=document.getElementById("quran-info");const funNote=s.fun?`<div style="margin-top:6px;color:var(--accent);font-size:13px">🐄 ${s.fun}</div>`:"";info.innerHTML=`<div style="font-family:'Amiri',serif;font-size:16px;color:var(--accent)">${i+1}. ${s.n} — ${s.en}</div><div style="font-family:'Amiri',serif;font-size:18px;margin:8px 0;direction:rtl;text-align:right;line-height:1.8">${s.ayah}</div><div style="font-size:12px;color:var(--text-muted)">${s.v} ayahs</div>${funNote}`;S.text=s.ayah;updateTextDisplay();render();document.querySelectorAll(".quran-num").forEach((el,j)=>el.classList.toggle("active",j===i));stats.surahsViewed.add(i);saveStats();checkBadges()}
+let activeLearnCategory="proverbs";
+function buildLearnCategoryBtns(){const r=document.getElementById("learn-category-btns");r.innerHTML="";Object.entries(LEARN_CATEGORIES).forEach(([key,cat])=>{const b=document.createElement("button");b.className="param-btn"+(key===activeLearnCategory?" active":"");b.textContent=cat.emoji+" "+(cat[S.lang]||cat.en);b.setAttribute("data-cat",key);b.onclick=()=>{activeLearnCategory=key;buildLearnCategoryBtns();showLearnContent()};r.appendChild(b)});updateLearnLabels()}
+function updateLearnLabels(){const titles={en:"Knowledge Explorer",fr:"Explorateur du Savoir",ar:"مستكشف المعرفة"};const subs={en:"Pick a category and discover something amazing!",fr:"Choisis une catégorie et découvre quelque chose d'incroyable !",ar:"اختر فئة واكتشف شيئاً مذهلاً!"};const t=document.querySelector(".learn-title-text");const s=document.querySelector(".learn-subtitle");if(t)t.textContent=titles[S.lang]||titles.en;if(s)s.textContent=subs[S.lang]||subs.en}
+function showLearnContent(){const area=document.getElementById("learn-content-area");const cat=LEARN_CONTENT[activeLearnCategory];const items=cat[S.lang]||cat.en;area.innerHTML="";const grid=document.createElement("div");grid.style.cssText="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px";items.forEach((item,i)=>{const card=document.createElement("div");card.style.cssText="padding:10px;background:var(--key-bg);border:1px solid rgba(212,168,67,0.15);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;transition:all 0.15s;direction:"+(S.lang==="ar"?"rtl":"ltr");card.textContent=item;card.onmouseenter=()=>{card.style.borderColor="var(--accent)";card.style.background="rgba(212,168,67,0.1)"};card.onmouseleave=()=>{card.style.borderColor="rgba(212,168,67,0.15)";card.style.background="var(--key-bg)"};card.onclick=()=>{S.text=item;updateTextDisplay();render();stats.factsViewed=(stats.factsViewed||0)+1;saveStats();checkBadges();toast(LEARN_CATEGORIES[activeLearnCategory].emoji+" "+({en:"Sent to cow!",fr:"Envoyé à la vache !",ar:"أُرسل إلى البقرة!"}[S.lang]||"Sent to cow!"))};grid.appendChild(card)});area.appendChild(grid);const randBtn=document.createElement("button");randBtn.className="param-btn";randBtn.style.marginTop="8px";randBtn.textContent="🎲 "+({en:"Random fact!",fr:"Fait aléatoire !",ar:"حقيقة عشوائية!"}[S.lang]||"Random fact!");randBtn.onclick=()=>{const r=items[Math.floor(Math.random()*items.length)];S.text=r;updateTextDisplay();render();stats.factsViewed=(stats.factsViewed||0)+1;saveStats();checkBadges();toast("🎲 "+({en:"Random!",fr:"Aléatoire !",ar:"عشوائي!"}[S.lang]||"Random!"))};area.appendChild(randBtn)}
 
 // ==============================
 // MODES
 // ==============================
 function setMode(mode){S.currentMode=mode;document.querySelectorAll(".mode-tab").forEach(b=>b.classList.toggle("active",b.textContent.toLowerCase().includes(mode.slice(0,3))||b.onclick.toString().includes("'"+mode+"'")));document.querySelectorAll(".mode-panel").forEach(p=>p.classList.toggle("active",p.id==="panel-"+mode));document.querySelectorAll(".mode-tab").forEach(b=>{const m=b.getAttribute("onclick")?.match(/'(\w+)'/);if(m)b.classList.toggle("active",m[1]===mode)})}
-function setLang(l){S.lang=l;buildKeyboard();buildMoodRow();buildQuickKeys();buildCharDropdown();buildThemeDropdown();buildPresetsDropdown();buildComicSelects();renderAll()}
+function setLang(l){S.lang=l;buildKeyboard();buildMoodRow();buildQuickKeys();buildCharDropdown();buildThemeDropdown();buildPresetsDropdown();buildLearnCategoryBtns();showLearnContent();buildComicSelects();buildScientistBtns();renderAll()}
 function setTalkMode(think){S.isThink=think;document.getElementById("say-btn").classList.toggle("active",!think);document.getElementById("think-btn").classList.toggle("active",think);render()}
 function setWrapWidth(v){S.wrapWidth=parseInt(v);document.getElementById("wrap-val").textContent=v;render()}
 function clearText(){S.text="";updateTextDisplay();render()}
@@ -742,14 +982,14 @@ function solveMath(){const input=document.getElementById("math-input").value.tri
 // ==============================
 // 🔐 CIPHER MODE
 // ==============================
-function setCipher(type){S.cipherType=type;document.querySelectorAll("[data-cipher]").forEach(b=>b.classList.toggle("active",b.dataset.cipher===type));encodeCipher()}
-function encodeCipher(){const input=document.getElementById("cipher-input").value;if(!input){document.getElementById("cipher-results").innerHTML="";return}stats.cipherCount++;saveStats();checkBadges();let result="";const t=S.cipherType;if(t==="abjad"){result=input.toLowerCase().split("").map(c=>{const v="abjdhwzhtyklmnsafSqr".indexOf(c);return v>=0?[1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,100,200][v]:c}).join(" ");const sum=result.split(" ").reduce((a,b)=>a+(parseInt(b)||0),0);result+="\nSum = "+sum}else if(t==="caesar"){const shift=7;result=input.split("").map(c=>{const code=c.charCodeAt(0);if(code>=65&&code<=90)return String.fromCharCode((code-65+shift)%26+65);if(code>=97&&code<=122)return String.fromCharCode((code-97+shift)%26+97);return c}).join("")+` (shift ${shift})`}else if(t==="binary"){result=input.split("").map(c=>"0"+c.charCodeAt(0).toString(2)).map(b=>b.slice(-8)).join(" ")}else if(t==="morse"){result=input.toLowerCase().split("").map(c=>MORSE_MAP[c]||c).join(" ")}else if(t==="mirror"){result=input.split("").reverse().join("")}else if(t==="atbash"){result=input.split("").map(c=>{const code=c.charCodeAt(0);if(code>=65&&code<=90)return String.fromCharCode(90-(code-65));if(code>=97&&code<=122)return String.fromCharCode(122-(code-97));return c}).join("")}document.getElementById("cipher-results").innerHTML=`<div class="cipher-output">${escapeHtml(result)}</div>`;S.text="🔐 "+result;updateTextDisplay();render()}
+function setCipher(type){S.cipherType=type;document.querySelectorAll("[data-cipher]").forEach(b=>b.classList.toggle("active",b.dataset.cipher===type));encodeCipher(true)}
+function encodeCipher(isTypeSwitch){const input=document.getElementById("cipher-input").value;if(!input){document.getElementById("cipher-results").innerHTML="";return}if(!isTypeSwitch){stats.cipherCount++;saveStats();checkBadges()};let result="";const t=S.cipherType;if(t==="abjad"){result=input.toLowerCase().split("").map(c=>{const v="abjdhwzhtyklmnsafsqr".indexOf(c);return v>=0?[1,2,3,4,5,6,7,8,9,10,20,30,40,50,60,70,80,90,100,200][v]:c}).join(" ");const sum=result.split(" ").reduce((a,b)=>a+(parseInt(b)||0),0);result+="\nSum = "+sum}else if(t==="caesar"){const shift=7;result=input.split("").map(c=>{const code=c.charCodeAt(0);if(code>=65&&code<=90)return String.fromCharCode((code-65+shift)%26+65);if(code>=97&&code<=122)return String.fromCharCode((code-97+shift)%26+97);return c}).join("")+` (shift ${shift})`}else if(t==="binary"){result=input.split("").map(c=>"0"+c.charCodeAt(0).toString(2)).map(b=>b.slice(-8)).join(" ")}else if(t==="morse"){result=input.toLowerCase().split("").map(c=>MORSE_MAP[c]||c).join(" ")}else if(t==="mirror"){result=input.split("").reverse().join("")}else if(t==="atbash"){result=input.split("").map(c=>{const code=c.charCodeAt(0);if(code>=65&&code<=90)return String.fromCharCode(90-(code-65));if(code>=97&&code<=122)return String.fromCharCode(122-(code-97));return c}).join("")}document.getElementById("cipher-results").innerHTML=`<div class="cipher-output">${escapeHtml(result)}</div>`;S.text="🔐 "+result;updateTextDisplay();render()}
 
 // ==============================
 // 🎯 TYPING RACE
 // ==============================
 let raceData={active:false,start:0,target:"",timer:null};
-const RACE_PHRASES={en:["Bismillah, let us begin!","Knowledge is light and ignorance is darkness","Al-Khwarizmi invented algebra","The pen is mightier than the sword","Seek knowledge from cradle to grave","Patience is the key to relief"],ar:["بسم الله الرحمن الرحيم","العلم نور والجهل ظلام","الخوارزمي اخترع الجبر","الصبر مفتاح الفرج","من جد وجد ومن زرع حصد","اطلبوا العلم من المهد إلى اللحد"]};
+const RACE_PHRASES={en:["Knowledge is light and ignorance is darkness","Al-Khwarizmi invented algebra in Baghdad","The pen is mightier than the sword","Seek knowledge from cradle to grave","Patience is the key to relief","A journey of a thousand miles begins with one step"],fr:["Le savoir est lumière et l'ignorance est ténèbres","Al-Khwarizmi a inventé l'algèbre à Bagdad","La patience est la clé du soulagement","Cherchez le savoir du berceau à la tombe","La plume est plus forte que l'épée","Un voyage de mille lieues commence par un seul pas"],ar:["العلم نور والجهل ظلام","الخوارزمي اخترع الجبر في بغداد","الصبر مفتاح الفرج","من جد وجد ومن زرع حصد","اطلبوا العلم من المهد إلى اللحد","في التأني السلامة وفي العجلة الندامة"]};
 function startRace(lang){const phrases=RACE_PHRASES[lang||"en"];raceData.target=phrases[Math.floor(Math.random()*phrases.length)];raceData.active=true;raceData.start=Date.now();document.getElementById("race-target").textContent=raceData.target;document.getElementById("race-target").style.direction=lang==="ar"?"rtl":"ltr";const inp=document.getElementById("race-input");inp.disabled=false;inp.value="";inp.style.direction=lang==="ar"?"rtl":"ltr";inp.focus();if(raceData.timer)clearInterval(raceData.timer);raceData.timer=setInterval(()=>{document.getElementById("race-time").textContent=((Date.now()-raceData.start)/1000).toFixed(1)},100)}
 function checkRace(){if(!raceData.active)return;const input=document.getElementById("race-input").value;const target=raceData.target;if(input===target){raceData.active=false;clearInterval(raceData.timer);const time=(Date.now()-raceData.start)/1000;const wpm=Math.round(target.split(" ").length/(time/60));document.getElementById("race-wpm").textContent=wpm;const ranks=[[60,"🐉 Dragon"],[40,"🦅 Eagle"],[25,"🐪 Camel"],[15,"🐄 Cow"],[8,"🐣 Chick"],[0,"🥚 Egg"]];document.getElementById("race-rank").textContent=(ranks.find(r=>wpm>=r[0])||ranks[ranks.length-1])[1];stats.racesWon++;saveStats();checkBadges();S.text="🎯 Race completed! "+time.toFixed(1)+"s — "+wpm+" WPM! "+document.getElementById("race-rank").textContent;updateTextDisplay();render();toast("🏁 "+wpm+" WPM! "+document.getElementById("race-rank").textContent)}}
 
@@ -757,7 +997,7 @@ function checkRace(){if(!raceData.active)return;const input=document.getElementB
 // 🗣️ COMIC STRIP
 // ==============================
 function buildComicSelects(){["comic-char1","comic-char2"].forEach((id,i)=>{const sel=document.getElementById(id);sel.innerHTML="";Object.entries(CHARS).forEach(([cid,ch])=>{const opt=document.createElement("option");opt.value=cid;opt.textContent=ch.emoji+" "+(ch.name[S.lang]||ch.name.en);sel.appendChild(opt)});sel.selectedIndex=i===0?0:1})}
-function renderComic(){const c1=document.getElementById("comic-char1").value,c2=document.getElementById("comic-char2").value;const t1=document.getElementById("comic-text1").value||"...";const t2=document.getElementById("comic-text2").value||"...";const strip=document.getElementById("comic-strip");const old={charId:S.charId,isThink:S.isThink};S.isThink=false;S.charId=c1;const p1=cowsay(t1);S.charId=c2;const p2=cowsay(t2);S.charId=old.charId;S.isThink=old.isThink;strip.innerHTML=`<div class="comic-panel">${escapeHtml(p1)}</div><div class="comic-panel">${escapeHtml(p2)}</div>`;stats.comicsCreated=(stats.comicsCreated||0)+1;saveStats();checkBadges()}
+function renderComic(){const c1=document.getElementById("comic-char1").value,c2=document.getElementById("comic-char2").value;const t1=document.getElementById("comic-text1").value||"...";const t2=document.getElementById("comic-text2").value||"...";const strip=document.getElementById("comic-strip");const old={charId:S.charId,isThink:S.isThink};S.isThink=false;S.charId=c1;const p1=cowsay(t1);S.charId=c2;const p2=cowsay(t2);S.charId=old.charId;S.isThink=old.isThink;strip.innerHTML=`<div class="comic-panel"><pre>${escapeHtml(p1)}</pre></div><div class="comic-panel"><pre>${escapeHtml(p2)}</pre></div>`;stats.comicsCreated=(stats.comicsCreated||0)+1;saveStats();checkBadges()}
 
 // ==============================
 // 🧪 GOLDEN AGE
@@ -776,20 +1016,17 @@ function sendMasjidToCow(){if(masjidPieces.length===0)return;S.text="I built a m
 // ==============================
 // PRAYER TIMES (simplified)
 // ==============================
-function updatePrayerBar(){const now=new Date(),h=now.getHours(),m=now.getMinutes();const prayers=[{name:"fajr",h:5,m:30},{name:"dhuhr",h:12,m:30},{name:"asr",h:15,m:45},{name:"maghrib",h:18,m:30},{name:"isha",h:20,m:0}];let next=null;prayers.forEach(p=>{const pMin=p.h*60+p.m,nMin=h*60+m;const el=document.querySelector(`[data-prayer="${p.name}"]`);if(el){el.classList.remove("active","next");if(nMin>=pMin&&nMin<pMin+30)el.classList.add("active");else if(!next&&nMin<pMin){next=p;el.classList.add("next")}}});if(next){const diff=next.h*60+next.m-(h*60+m);document.getElementById("prayer-next").textContent=`⏰ ${next.name} in ${diff} min`}else{document.getElementById("prayer-next").textContent="🌙"}}
-
-// ==============================
-// RAMADAN
-// ==============================
-function checkRamadan(){const banner=document.getElementById("ramadan-banner");const now=new Date();const y=now.getFullYear();// Approximate Ramadan 2026: Feb 18 - Mar 19 (hijri estimation)
-const ramStart=new Date(y,1,18),ramEnd=new Date(y,2,19);if(now>=ramStart&&now<=ramEnd){const day=Math.floor((now-ramStart)/(1000*60*60*24))+1;banner.style.display="block";banner.innerHTML=`🌙 رمضان مبارك! Day ${day}/30 — صبر وأجر! <span style="font-size:12px;display:block;margin-top:4px">Iftar approx. 18:30 🌅</span>`}}
-
 // ==============================
 // KEYBOARD
 // ==============================
-document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.target.tagName==="SELECT")return;if((e.ctrlKey||e.metaKey)&&e.key==="v"){e.preventDefault();navigator.clipboard.readText().then(c=>{if(c){S.text+=c;updateTextDisplay();render()}});return}if((e.ctrlKey||e.metaKey)&&e.key==="c"){e.preventDefault();if(S.text)navigator.clipboard.writeText(S.text);return}if(e.key==="Backspace"){e.preventDefault();S.text=S.text.slice(0,-1);updateTextDisplay();render()}else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){S.text+=e.key;updateTextDisplay();render();stats.msgCount++;saveStats();checkBadges()}});
+document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"||e.target.tagName==="SELECT")return;if((e.ctrlKey||e.metaKey)&&e.key==="v"){e.preventDefault();navigator.clipboard.readText().then(c=>{if(c){S.text+=c;updateTextDisplay();render()}});return}if((e.ctrlKey||e.metaKey)&&e.key==="c"){e.preventDefault();if(S.text)navigator.clipboard.writeText(S.text);return}if(e.key==="Backspace"){e.preventDefault();S.text=S.text.slice(0,-1);updateTextDisplay();render()}else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){const wasEmpty=S.text.length===0;S.text+=e.key;updateTextDisplay();render();if(wasEmpty){stats.msgCount++;saveStats();checkBadges()}}});
 
 // ==============================
+// UI TOGGLE FUNCTIONS
+function toggleCustomize(){const btn=document.getElementById("customize-toggle"),body=document.getElementById("customize-body");btn.classList.toggle("open");body.classList.toggle("open")}
+function toggleKeyboard(){const btn=document.getElementById("kb-toggle"),wrap=document.getElementById("keyboard-wrap");const opening=!wrap.classList.contains("open");btn.classList.toggle("open");wrap.classList.toggle("open");const lbl=btn.querySelector("span");if(lbl){const t=S.lang==="ar"?"إخفاء لوحة المفاتيح":S.lang==="fr"?"Masquer clavier":"Hide Keyboard";const t2=S.lang==="ar"?"إظهار لوحة المفاتيح":S.lang==="fr"?"Afficher clavier":"Show Keyboard";lbl.textContent=opening?t:t2}}
+function toggleCmd(){const cmd=document.getElementById("output-cmd"),btn=document.getElementById("cmd-toggle");cmd.classList.toggle("open");const isOpen=cmd.classList.contains("open");btn.textContent=isOpen?"▾ Hide command":"▸ Show command"}
+
 // INIT
 // ==============================
 window.addEventListener("DOMContentLoaded",()=>{
@@ -799,8 +1036,8 @@ window.addEventListener("DOMContentLoaded",()=>{
   // Build everything
   buildMoodRow();buildEyesRow();buildTongueRow();buildKeyboard();buildQuickKeys();
   buildCharDropdown();buildThemeDropdown();buildPresetsDropdown();
-  buildQuranGrid();buildComicSelects();buildScientistBtns();buildMasjidParts();
-  renderAll();updatePrayerBar();setInterval(updatePrayerBar,60000);checkRamadan();
+  buildLearnCategoryBtns();showLearnContent();buildComicSelects();buildScientistBtns();buildMasjidParts();
+  renderAll();
   // Splash
   setTimeout(()=>document.getElementById("splash").classList.add("hidden"),3000);
   saveStats();checkBadges();
